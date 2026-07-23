@@ -1,0 +1,35 @@
+class Solution:
+    def canFinish(self, numCourses: int, prerequisites: List[List[int]]) -> bool:
+        # unvisited → we have not started exploring this course
+        # visiting  → this course is currently in the active DFS path
+        # visited   → this course has already been fully verified as safe
+
+        pre_map = {i: [] for i in range(numCourses)}
+
+        for c, pre in prerequisites:
+            pre_map[c].append(pre)
+        
+        visiting = set()
+        visited = set()
+        def dfs(course):
+            if course in visiting: # cycle detected
+                return False
+
+            if course in visited:
+                return True
+            
+            visiting.add(course) 
+        
+            for pre in pre_map[course]:
+                if not dfs(pre):
+                    return False
+            
+            visiting.remove(course)
+            visited.add(course)
+            return True 
+        
+        for course in range(numCourses):
+            if not dfs(course):
+                return False
+        
+        return True
