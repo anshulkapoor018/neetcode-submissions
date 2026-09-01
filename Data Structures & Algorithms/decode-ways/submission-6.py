@@ -1,0 +1,28 @@
+class Solution:
+    def numDecodings(self, s: str) -> int:
+        # we have 2 choices pick 1 or pick 2
+
+        memo = {}
+
+        def dfs(i):
+            if i == len(s):
+                return 1
+            
+            if s[i] == "0":
+                return 0
+            
+            if i in memo:
+                return memo[i]
+            
+            # choice 1
+            res = dfs(i+1)
+            
+            # choice 2 only if it satisfies below condition
+            if (i+1) < len(s) and 10 <= int(s[i : i + 2]) <= 26:
+                res += dfs(i + 2)
+            
+            memo[i] = res
+
+            return memo[i]
+        
+        return dfs(0)
